@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const express_validator_1 = require("express-validator");
+const middlewares_1 = require("../middlewares");
+const controllers_1 = require("../controllers");
+const noteController_1 = require("../controllers/noteController");
+const router = (0, express_1.Router)();
+router.post("/register", (0, express_validator_1.body)("email").isEmail(), (0, express_validator_1.body)("password").isLength({ min: 6, max: 32 }), controllers_1.userController.register);
+router.post("/login", controllers_1.userController.login);
+router.post("/logout", controllers_1.userController.logout);
+router.get("/refresh", controllers_1.userController.refresh);
+router.get("/noteNames", middlewares_1.isAuthenticated, noteController_1.noteController.getNoteNames);
+router.post("/notes", middlewares_1.isAuthenticated, (0, express_validator_1.body)("id").isString(), (0, express_validator_1.body)("title").isString(), noteController_1.noteController.createNote);
+router.get("/notes", middlewares_1.isAuthenticated, noteController_1.noteController.getNote);
+router.put("/notes", middlewares_1.isAuthenticated, noteController_1.noteController.updateNote);
+router.delete("/notes", middlewares_1.isAuthenticated, noteController_1.noteController.deleteNote);
+exports.default = router;
